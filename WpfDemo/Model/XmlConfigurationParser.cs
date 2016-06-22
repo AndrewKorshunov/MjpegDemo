@@ -5,11 +5,11 @@ using System.Configuration;
 
 namespace WpfDemo.Model
 {
-    public static class XmlConfigurationParser
+    static public class XmlConfigurationParser
     {
         private static readonly string url;
         private static readonly XmlDocument xml;
-                
+
         private static IEnumerable<Dictionary<string, string>> cachedChannels;
         private static Dictionary<string, Dictionary<string, string>> cachedConfigs;
         private static Dictionary<string, string> cachedServer;
@@ -20,7 +20,7 @@ namespace WpfDemo.Model
                 + ConfigurationManager.AppSettings["ConfigurationAddress"]
                 + "?login=" + ConfigurationManager.AppSettings["Login"];
             xml = new XmlDocument();
-            xml.Load(url);            
+            xml.Load(url);
         }
 
         static public IEnumerable<Dictionary<string, string>> GetVideoChannels()
@@ -77,5 +77,5 @@ namespace WpfDemo.Model
             }
             return cachedServer;
         }
-    }    
+    }
 }
