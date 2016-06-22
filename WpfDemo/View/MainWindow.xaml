@@ -10,21 +10,28 @@
     <Window.DataContext>
         <local:MainViewModel/>
     </Window.DataContext>
-
-    <Grid>
+    <!--
+    <Window.Resources>
+        <local:BoolVisibilityConverter x:Key="BoolVisibilityConverter"/>
+    </Window.Resources>
+    -->
+    <Grid>        
         <Grid.RowDefinitions>
-            <RowDefinition Height="100"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Button x:Name="ButtonStart" Command="{Binding LoadSelectedChannelCommand}" Content="Load Selected" HorizontalAlignment="Left" Margin="19,10,0,0" VerticalAlignment="Top" Width="85" Height="22"/>        
-        <ListBox x:Name="ListBox" ItemsSource="{Binding Channels}" SelectedItem="{Binding SelectedChannel}" HorizontalAlignment="Left" Height="80" Margin="122,10,0,0" VerticalAlignment="Top" Width="136">
+        <Button Command="{Binding LoadSelectedChannelCommand}" Content="Load Selected" HorizontalAlignment="Left" Margin="19,10,0,0" VerticalAlignment="Top" Width="85" Height="22"/>
+        <ListBox ItemsSource="{Binding Channels}" SelectedItem="{Binding SelectedChannel}" HorizontalAlignment="Left" Height="Auto" Margin="122,10,0,0" VerticalAlignment="Top" Width="136">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Name}"/>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <Image x:Name="Image" Source="{Binding CurrentFrame}" Height="auto" Width="auto" Margin="5,5,5,5" VerticalAlignment="Stretch" HorizontalAlignment="Center" Grid.Row="1"/>
+        <Image Source="{Binding CurrentFrame}" Height="auto" Width="auto" Margin="5,5,5,5" VerticalAlignment="Stretch" HorizontalAlignment="Center" Grid.Row="1"/>
+        <!--
+        <Label Content="Loading" Visibility="{Binding IsConnecting, Converter={StaticResource BoolVisibilityConverter}}" Margin="19,42,0,0" Height="auto" Width="auto" FontSize="16"  VerticalAlignment="Top" HorizontalAlignment="Left"/>
+        -->
     </Grid>
 </Window>

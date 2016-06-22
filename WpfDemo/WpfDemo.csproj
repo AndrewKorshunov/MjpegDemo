@@ -63,9 +63,16 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="HttpVideoConnector.cs" />
+    <Compile Include="Model\HttpVideoConnector.cs" />
+    <Compile Include="Model\IStreamParser.cs" />
+    <Compile Include="Model\IStreamSource.cs" />
+    <Compile Include="Model\MjpegPacket.cs" />
+    <Compile Include="Model\MjpegStreamParser.cs" />
+    <Compile Include="Model\StreamHandler.cs" />
+    <Compile Include="Model\VideoChannel.cs" />
+    <Compile Include="Model\VideoConfiguration.cs" />
     <Compile Include="XmlConfigurationParser.cs" />
-    <Compile Include="Model\MjpegDemoModel.cs" />
+    <Compile Include="Model\MjpegVideo.cs" />
     <Compile Include="ViewModel\LoadCommand.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="View\MainWindow.xaml.cs">
@@ -103,12 +110,6 @@
     </None>
   </ItemGroup>
   <ItemGroup />
-  <ItemGroup>
-    <ProjectReference Include="..\DemoLibrary\DemoLibrary.csproj">
-      <Project>{aa523b8d-669d-4a9b-a0bb-c7e810d1c58a}</Project>
-      <Name>DemoLibrary</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -22,7 +22,7 @@ namespace WpfDemo.View
     {
         public MainWindow()
         {
-            InitializeComponent();
+            InitializeComponent();            
         }
     }
 }

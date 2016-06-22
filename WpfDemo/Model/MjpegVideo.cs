@@ -7,11 +7,11 @@ using DemoLibrary;
 
 namespace WpfDemo.Model
 {
-    class MjpegDemoModel
+    class MjpegVideo
     {
         public IList<VideoChannel> Channels { get; private set; }
 
-        public MjpegDemoModel()
+        public MjpegVideo()
         {
             Channels = new List<VideoChannel>();
         }

@@ -9,6 +9,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Input;
 using System.Windows;
 using System.Configuration;
+using WpfDemo.Model;
 
 namespace WpfDemo.ViewModel
 {
@@ -16,46 +17,44 @@ namespace WpfDemo.ViewModel
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private BitmapImage curFrame;
-
-        public IList<VideoChannel> Channels { get; set; }
-        public VideoChannel SelectedChannel { get; set; }        
-        public BitmapImage CurrentFrame
-        {
-            get
-            {
-                return curFrame;
-            }
-            set
-            {
-                curFrame = value;
-                OnPropertyChangedEvent("CurrentFrame");
-            }        
-        }
-        public ICommand LoadSelectedChannelCommand { get; set; }
-
-        private MjpegStreamPacketParser parser;
+        private readonly MjpegHandler streamHandler;
+        private readonly HttpVideoConnector connector;
+        private BitmapImage currentFrame;
+        private bool isConnecting;
 
         public MainViewModel()
         {
-            LoadSelectedChannelCommand = new LoadCommand(obj => LoadSelectedChannel());
-            parser = new MjpegStreamPacketParser();
-            parser.PacketFound += () =>
-                {
-                    Application.Current.Dispatcher.InvokeAsync(()=>{
-                    var bitmapImage = ImageToBitmap(parser.CurrentPacket.Picture);
-                    this.CurrentFrame = bitmapImage;}); // HACK
-                };
-
+            LoadSelectedChannelCommand = new LoadChannelCommand(() => LoadSelectedChannel());
             Channels = new List<VideoChannel>();
+            connector = new HttpVideoConnector();
+            streamHandler = new MjpegHandler(connector);
+            PopulateChannels();
 
-            var server = new VideoServer();
-            server.LoadFromConfig(XmlConfigurationParser.GetVideoServer());
-            foreach (var tt in XmlConfigurationParser.GetVideoChannels())
+            streamHandler.PictureReady +=
+                () => Application.Current.Dispatcher.InvokeAsync(() => DisplayPicture(streamHandler.Frame));
+        }
+                
+        public bool IsConnecting
+        {
+            get { return isConnecting; }
+            private set
             {
-                Channels.Add(new VideoChannel() { Name = tt["Name"], Id = tt["Id"], Server = server });
+                isConnecting = value;
+                OnPropertyChangedEvent("IsConnecting");
             }
         }
+        public IList<VideoChannel> Channels { get; set; }
+        public BitmapImage CurrentFrame
+        {
+            get { return currentFrame; }
+            set
+            {
+                currentFrame = value;
+                OnPropertyChangedEvent("CurrentFrame");
+            }
+        }
+        public VideoChannel SelectedChannel { get; set; }
+        public ICommand LoadSelectedChannelCommand { get; set; }
 
         private void LoadSelectedChannel()
         {
@@ -63,33 +62,39 @@ namespace WpfDemo.ViewModel
                 MessageBox.Show("Select channel first");
             else
             {
-                var stream = new HttpVideoConnector().Connect(SelectedChannel, new VideoConfiguration() { ResolutionX = 120, ResolutionY = 90 });
-                if (parser.mjpegStream != null) // already running
-                {
-                    parser.StopParsing();
-                    parser.Stopped += () =>
-                    {
-                        Task.Run(() => parser.ParseHeaderSlowPacketFast(stream));                        
-                    };
-                }
-                else
-                {
-                    Task.Run(() => parser.ParseHeaderSlowPacketFast(stream)); // HACK HACK HACK
-                }
+                var allConfigs = XmlConfigurationParser.GetVideoConfigs();
+                var videoConfig = VideoConfiguration.LoadFromConfig(allConfigs["High"]);
+                videoConfig.Fps = 1;
+                connector.Setup(SelectedChannel, videoConfig);
+                streamHandler.Start();
             }
+        }
+
+        private void DisplayPicture(System.Drawing.Image picture)
+        {
+            var bitmapImage = ImageToBitmap(picture);
+            this.CurrentFrame = bitmapImage;
         }
 
         private BitmapImage ImageToBitmap(System.Drawing.Image picture)
         {
             var bitmap = new BitmapImage();
-            bitmap.BeginInit();
-            System.IO.MemoryStream memoryStream = new System.IO.MemoryStream();
+            var memoryStream = new System.IO.MemoryStream();
             picture.Save(memoryStream, picture.RawFormat);
             memoryStream.Seek(0, System.IO.SeekOrigin.Begin);
+            bitmap.BeginInit();
             bitmap.StreamSource = memoryStream;
             bitmap.EndInit();
-
             return bitmap;
+        }
+
+        private void PopulateChannels()
+        {
+            foreach (var channelsDictionary in XmlConfigurationParser.GetVideoChannels())
+            {
+                var channel = VideoChannel.LoadFromConfig(channelsDictionary);
+                Channels.Add(channel);
+            }
         }
 
         protected void OnPropertyChangedEvent(string propertyName)

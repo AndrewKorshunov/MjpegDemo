@@ -7,10 +7,11 @@ using System.Windows.Input;
 
 namespace WpfDemo.ViewModel
 {
-    class LoadCommand : ICommand
+    class LoadChannelCommand : ICommand
     {
-        private Action<object> action;
-        public LoadCommand(Action<object> action)
+        private Action action;
+
+        public LoadChannelCommand(Action action)
         {
             this.action = action;
         }
@@ -26,7 +27,7 @@ namespace WpfDemo.ViewModel
         {
             var handler = action;
             if (handler != null)
-                handler(parameter);
+                handler();
         }
     }
 }
