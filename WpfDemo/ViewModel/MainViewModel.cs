@@ -114,9 +114,10 @@ namespace WpfDemo.ViewModel
 
         private void SetupDefaultConfig()
         {
-            var allConfigs = XmlConfigurationParser.GetVideoConfigs();
+            string defaultQuality = System.Configuration.ConfigurationManager.AppSettings["DefaultQuality"];
+            var allConfigs = XmlConfigurationParser.GetVideoConfigs();            
             DefaultConfig = new VideoConfiguration();
-            DefaultConfig = VideoConfiguration.LoadFromConfig(allConfigs["High"]);
+            DefaultConfig = VideoConfiguration.LoadFromConfig(allConfigs[defaultQuality]);
         }
     }
 }
