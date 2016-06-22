@@ -16,7 +16,7 @@ namespace MjpegLibrary
         public MjpegStreamReader(IStreamSource streamSource)
         {
             this.streamSource = streamSource;
-            this.streamParser = new MjpegStreamParser("--myboundary\r\n"); // Bou
+            this.streamParser = new MjpegStreamParser("--myboundary\r\n"); // Boundary could be in http headers, but I haven't see it
 
             this.streamParser.InvalidStream += () =>
                 {
