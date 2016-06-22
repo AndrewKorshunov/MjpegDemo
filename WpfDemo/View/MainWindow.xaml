@@ -21,24 +21,25 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Button Command="{Binding LoadSelectedChannelCommand}" Content="Load Selected" HorizontalAlignment="Left" Margin="19,10,0,0" VerticalAlignment="Top" Width="85" Height="22"/>
-        <ListBox ItemsSource="{Binding Channels}" SelectedItem="{Binding SelectedChannel}" HorizontalAlignment="Left" Height="Auto" Margin="122,10,0,0" VerticalAlignment="Top" Width="136">
+        <Button Command="{Binding LoadSelectedChannelCommand}" Content="Load Selected" HorizontalAlignment="Left" Margin="19,10,0,0" VerticalAlignment="Top" Width="85" Height="22"/>        
+        <ListBox ItemsSource="{Binding Channels}" SelectedItem="{Binding SelectedChannel}" HorizontalAlignment="Left" Height="Auto" Margin="194,4,0,0" VerticalAlignment="Top" Width="136">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Name}"/>
                 </DataTemplate>
             </ListBox.ItemTemplate>
-        </ListBox>
+        </ListBox>        
         <Image Source="{Binding CurrentFrame}" Height="auto" Width="auto" Margin="5,5,5,5" VerticalAlignment="Stretch" HorizontalAlignment="Center" Grid.Row="1"/>
-        
-        <ComboBox ItemsSource="{Binding Channels}" HorizontalAlignment="Left" Margin="277,0,0,0" VerticalAlignment="Top" Width="120">
+        <!--
+        <ComboBox ItemsSource="{Binding Channels}" SelectedItem="{Binding SelectedChannel}" SelectedIndex="0" HorizontalAlignment="Left" Margin="235,10,0,0" VerticalAlignment="Top" Width="120" IsDropDownOpen="True">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Name}"/>
                 </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>
-        <Label Content="Loading" Visibility="{Binding IsConnecting, Converter={StaticResource BoolVisibilityConverter}}" Margin="19,42,0,0" Height="auto" Width="auto" FontSize="16"  VerticalAlignment="Top" HorizontalAlignment="Left"/>
+        -->
+        <Label Content="Loading" Visibility="{Binding IsConnecting, Converter={StaticResource BoolVisibilityConverter}}" Margin="122,4,0,0" Height="auto" Width="auto" FontSize="16"  VerticalAlignment="Top" HorizontalAlignment="Left"/>
         
     </Grid>
 </Window>
