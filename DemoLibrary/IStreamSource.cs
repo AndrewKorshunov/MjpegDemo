@@ -2,9 +2,9 @@
 using System.IO;
 using System.Threading.Tasks;
 
-namespace WpfDemo.Model
+namespace MjpegLibrary
 {
-    internal interface IStreamSource
+    public interface IStreamSource
     {
         Stream GetStream();
         Task<Stream> GetStreamAsync();

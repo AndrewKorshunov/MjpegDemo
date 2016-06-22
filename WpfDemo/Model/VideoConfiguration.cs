@@ -5,10 +5,10 @@ namespace WpfDemo.Model
 {
     public class VideoConfiguration
     {
+        public int Fps { get; set; }
         public int ResolutionX { get; set; }
         public int ResolutionY { get; set; }
-        public int Fps { get; set; }
-
+        
         static public VideoConfiguration LoadFromConfig(IDictionary<string, string> videoConfig)
         {
             var config = new VideoConfiguration();

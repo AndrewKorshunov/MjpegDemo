@@ -2,31 +2,30 @@
 using System.IO;
 using System.Drawing;
 
-namespace WpfDemo.Model
+namespace MjpegLibrary
 {
-    class MjpegHandler
+    public class MjpegStreamReader
     {
-        public event Action PictureReady = () => { };        
+        public event Action PictureReady = () => { };
+        public event Action Starting = () => { };
 
+        private Stream mjpegStream;
         private readonly IStreamParser streamParser;
         private readonly IStreamSource streamSource;
-        private Stream mjpegStream;
-        
-        public MjpegHandler(IStreamSource streamSource)
+
+        public MjpegStreamReader(IStreamSource streamSource)
         {
             this.streamSource = streamSource;
-            streamParser = new MjpegStreamParser("--myboundary\r\n");
+            this.streamParser = new MjpegStreamParser("--myboundary\r\n"); // Bou
 
-            streamParser.InvalidStream += () =>
+            this.streamParser.InvalidStream += () =>
                 {
                     // if stream is broken or stopped, dispose it and get new one
                     mjpegStream.Dispose();
                     StartNewStreamParsing();
                 };
-
-            streamParser.PacketFound += (packetBytes) =>
+            this.streamParser.PacketFound += (packetBytes) =>
                 {
-                    // Not asynchronous jpeg parser
                     Frame = MjpegPacket.GetImageFromPacket(packetBytes);
                     PictureReady();
                 };
@@ -50,6 +49,7 @@ namespace WpfDemo.Model
         private async void StartNewStreamParsing()
         {
             mjpegStream = await streamSource.GetStreamAsync().ConfigureAwait(false);
+            Starting();
             streamParser.StartParsing(mjpegStream);
         }
     }

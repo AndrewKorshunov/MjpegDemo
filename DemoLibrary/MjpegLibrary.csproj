@@ -7,8 +7,8 @@
     <ProjectGuid>{AA523B8D-669D-4A9B-A0BB-C7E810D1C58A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DemoLibrary</RootNamespace>
-    <AssemblyName>DemoLibrary</AssemblyName>
+    <RootNamespace>MjpegLibrary</RootNamespace>
+    <AssemblyName>MjpegLibrary</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -41,9 +41,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Channel.cs" />
-    <Compile Include="HttpConnector_old.cs" />
+    <Compile Include="IStreamParser.cs" />
+    <Compile Include="IStreamSource.cs" />
+    <Compile Include="MjpegPacket.cs" />
     <Compile Include="MjpegStreamParser.cs" />
+    <Compile Include="MjpegStreamReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

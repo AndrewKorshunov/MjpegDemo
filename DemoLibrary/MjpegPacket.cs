@@ -2,7 +2,7 @@
 using System.IO;
 using System.Drawing;
 
-namespace WpfDemo.Model
+namespace MjpegLibrary
 {
     static public class MjpegPacket
     {

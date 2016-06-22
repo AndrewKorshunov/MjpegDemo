@@ -3,11 +3,14 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoLibrary", "DemoLibrary\DemoLibrary.csproj", "{AA523B8D-669D-4A9B-A0BB-C7E810D1C58A}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfApp", "WpfApp\WpfApp.csproj", "{79715721-BC55-4B82-8BAF-921A3D8E275A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MjpegLibrary", "DemoLibrary\MjpegLibrary.csproj", "{AA523B8D-669D-4A9B-A0BB-C7E810D1C58A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfDemo", "WpfDemo\WpfDemo.csproj", "{89DC183F-385B-4BD2-ADD2-029C4D8053F0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{782AB266-3A6E-419F-BD7F-A6C36B96D4F6}"
+	ProjectSection(SolutionItems) = preProject
+		ReadMe.md = ReadMe.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,10 +22,6 @@ Global
 		{AA523B8D-669D-4A9B-A0BB-C7E810D1C58A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AA523B8D-669D-4A9B-A0BB-C7E810D1C58A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AA523B8D-669D-4A9B-A0BB-C7E810D1C58A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{79715721-BC55-4B82-8BAF-921A3D8E275A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{79715721-BC55-4B82-8BAF-921A3D8E275A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{79715721-BC55-4B82-8BAF-921A3D8E275A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{79715721-BC55-4B82-8BAF-921A3D8E275A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{89DC183F-385B-4BD2-ADD2-029C4D8053F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{89DC183F-385B-4BD2-ADD2-029C4D8053F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{89DC183F-385B-4BD2-ADD2-029C4D8053F0}.Release|Any CPU.ActiveCfg = Release|Any CPU

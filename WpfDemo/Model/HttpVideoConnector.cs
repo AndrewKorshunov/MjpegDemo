@@ -6,14 +6,14 @@ using System.Configuration;
 
 namespace WpfDemo.Model
 {
-    public class HttpVideoConnector : IStreamSource
+    public class HttpVideoConnector : IVideoStreamSource
     {
-        private WebClient webClient;
+        private readonly WebClient webClient;
         private string address;
 
         public HttpVideoConnector()
         {
-            webClient = new WebClient();
+            this.webClient = new WebClient();
         }
 
         public Stream GetStream()
@@ -22,7 +22,7 @@ namespace WpfDemo.Model
         }
 
         public Task<Stream> GetStreamAsync()
-        {
+        {            
             return webClient.OpenReadTaskAsync(address);
         }
 

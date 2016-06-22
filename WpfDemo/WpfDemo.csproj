@@ -64,16 +64,14 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Model\HttpVideoConnector.cs" />
-    <Compile Include="Model\IStreamParser.cs" />
-    <Compile Include="Model\IStreamSource.cs" />
-    <Compile Include="Model\MjpegPacket.cs" />
-    <Compile Include="Model\MjpegStreamParser.cs" />
-    <Compile Include="Model\StreamHandler.cs" />
+    <Compile Include="Model\IVideoStreamSource.cs" />
     <Compile Include="Model\VideoChannel.cs" />
     <Compile Include="Model\VideoConfiguration.cs" />
-    <Compile Include="XmlConfigurationParser.cs" />
-    <Compile Include="Model\MjpegVideo.cs" />
-    <Compile Include="ViewModel\LoadCommand.cs" />
+    <Compile Include="Model\XmlConfigurationParser.cs" />
+    <Compile Include="ViewModel\BoolVisibilityConverter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ViewModel\LoadChannelCommand.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="View\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -98,6 +96,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="ClassDiagram1.cd" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -109,7 +108,12 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\DemoLibrary\MjpegLibrary.csproj">
+      <Project>{aa523b8d-669d-4a9b-a0bb-c7e810d1c58a}</Project>
+      <Name>MjpegLibrary</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

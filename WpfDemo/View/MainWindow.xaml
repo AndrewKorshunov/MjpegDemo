@@ -10,11 +10,11 @@
     <Window.DataContext>
         <local:MainViewModel/>
     </Window.DataContext>
-    <!--
+
     <Window.Resources>
         <local:BoolVisibilityConverter x:Key="BoolVisibilityConverter"/>
     </Window.Resources>
-    -->
+  
     <Grid>        
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -30,8 +30,15 @@
             </ListBox.ItemTemplate>
         </ListBox>
         <Image Source="{Binding CurrentFrame}" Height="auto" Width="auto" Margin="5,5,5,5" VerticalAlignment="Stretch" HorizontalAlignment="Center" Grid.Row="1"/>
-        <!--
+        
+        <ComboBox ItemsSource="{Binding Channels}" HorizontalAlignment="Left" Margin="277,0,0,0" VerticalAlignment="Top" Width="120">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Name}"/>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
         <Label Content="Loading" Visibility="{Binding IsConnecting, Converter={StaticResource BoolVisibilityConverter}}" Margin="19,42,0,0" Height="auto" Width="auto" FontSize="16"  VerticalAlignment="Top" HorizontalAlignment="Left"/>
-        -->
+        
     </Grid>
 </Window>
