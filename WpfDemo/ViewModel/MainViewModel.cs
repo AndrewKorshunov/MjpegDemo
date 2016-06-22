@@ -21,7 +21,7 @@ namespace WpfDemo.ViewModel
 
         public MainViewModel()
         {
-            // Button click will execute LoadSelectedChannel(), but only if its not loading channel stream right now
+            // Button click will execute LoadSelectedChannel(), but only if channel is not loading right now
             LoadSelectedChannelCommand = new LoadChannelCommand(LoadSelectedChannel, () => !isConnecting);
             httpVideoSource = new HttpVideoConnector();
             mjpegReader = new MjpegStreamReader(httpVideoSource);
@@ -32,7 +32,7 @@ namespace WpfDemo.ViewModel
             mjpegReader.Starting += () => this.IsConnecting = false;
             mjpegReader.PictureReady += () =>
                 {
-                    // Racing condition - Application.Current == null when window is closing, but parsing thread returns new picture.
+                    // Race condition - Application.Current == null when window is closing, but parsing thread returns new picture.
                     // Safety check, there should be another way to ensure safety.
                     if (Application.Current != null) 
                         Application.Current.Dispatcher.InvokeAsync(() => DisplayPicture(mjpegReader.Frame));
