@@ -109,7 +109,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DemoLibrary\MjpegLibrary.csproj">
+    <ProjectReference Include="..\MjpegLibrary\MjpegLibrary.csproj">
       <Project>{aa523b8d-669d-4a9b-a0bb-c7e810d1c58a}</Project>
       <Name>MjpegLibrary</Name>
     </ProjectReference>
