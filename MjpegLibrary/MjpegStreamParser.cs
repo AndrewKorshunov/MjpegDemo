@@ -10,7 +10,7 @@ namespace MjpegLibrary
     {
         public event Action InvalidStream = () => { };
         public event Action<byte[]> PacketFound = (bytes) => { };
-        
+
         private readonly int bufferSize;
         private readonly string packetDelimiter;
         private bool shouldStop;
@@ -18,9 +18,9 @@ namespace MjpegLibrary
         public MjpegStreamParser(string packetDelimiter)
         {
             this.packetDelimiter = packetDelimiter;
-            this.bufferSize = 4096; 
+            this.bufferSize = 4096;
         }
-        
+
         public bool IsParsing { get; private set; }
 
         public async void StartParsing(Stream mjpegStream)
@@ -30,7 +30,7 @@ namespace MjpegLibrary
             shouldStop = false;
             IsParsing = true;
             int bytesRead = 0;
-            byte[] boundary = Encoding.UTF8.GetBytes(packetDelimiter); // Should get encoding from webResponse
+            byte[] boundary = Encoding.UTF8.GetBytes(packetDelimiter); // Could get encoding from webResponse
             byte[] buffer = new byte[bufferSize];
             var packetBytes = new List<byte>();
 
@@ -45,7 +45,7 @@ namespace MjpegLibrary
                     break;
                 }
                 if (bytesRead == -1) // end of stream
-                {                    
+                {
                     break;
                 }
 
@@ -58,7 +58,7 @@ namespace MjpegLibrary
                 packetBytes.AddRange(buffer.Take(bytesRead));
             }
             // shouldStop == true or stream is broken at this point, so new stream is needed
-            this.IsParsing = false; 
+            this.IsParsing = false;
             InvalidStream();
         }
 
@@ -70,29 +70,26 @@ namespace MjpegLibrary
         private int FindStartOfSubArray(byte[] array, byte[] subArray)
         {
             int leftToCheck = array.Length; // indexes of array left to check
-            int startIndex = 0; // searching in array from this index
-            int startOfSubarrayIndex; // first element of subarray found at
+            int searchStartIndex = 0; // searching in array from this index
             while (leftToCheck >= subArray.Length)
             {
-                startOfSubarrayIndex = Array.IndexOf(array, subArray[0], startIndex, leftToCheck - subArray.Length + 1);
-                if (startOfSubarrayIndex == -1)
+                // first element of subarray found in array at
+                int startOfSubArray = Array.IndexOf(array, subArray[0], searchStartIndex, leftToCheck - subArray.Length + 1);
+                if (startOfSubArray == -1)
                     return -1;
 
-                int i, p;
-                // check for needle
-                for (i = 0, p = startOfSubarrayIndex; i < subArray.Length; i++, p++)
+                int i = 0;
+                for (; i < subArray.Length; i++) // I assume that subarray.Length < array.Length
                 {
-                    if (array[p] != subArray[i])
-                    {
+                    if (array[startOfSubArray + i] != subArray[i])
                         break;
-                    }
                 }
                 if (i == subArray.Length)
                 {
-                    return startOfSubarrayIndex;
-                }
-                leftToCheck -= (startOfSubarrayIndex - startIndex + 1);
-                startIndex = startOfSubarrayIndex + 1;
+                    return startOfSubArray;
+                }                
+                searchStartIndex = startOfSubArray + 1;
+                leftToCheck = array.Length - searchStartIndex;
             }
             return -1;
         }
