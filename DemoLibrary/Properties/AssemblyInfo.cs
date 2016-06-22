@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // Управление общими сведениями о сборке осуществляется с помощью 
 // набора атрибутов. Измените значения этих атрибутов, чтобы изменить сведения,
 // связанные со сборкой.
-[assembly: AssemblyTitle("DemoLibrary")]
+[assembly: AssemblyTitle("MjpegLibrary")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("DemoLibrary")]
+[assembly: AssemblyProduct("MjpegLibrary")]
 [assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
