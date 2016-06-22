@@ -34,8 +34,12 @@ namespace WpfDemo.ViewModel
                 {
                     // Race condition - Application.Current == null when window is closing, but parsing thread returns new picture.
                     // Safety check, there should be another way to ensure safety.
-                    if (Application.Current != null) 
-                        Application.Current.Dispatcher.InvokeAsync(() => DisplayPicture(mjpegReader.Frame));
+                    if (Application.Current != null)
+                    {
+                        var bitmapImage = ImageToBitmap(mjpegReader.Frame);
+                        bitmapImage.Freeze();
+                        Application.Current.Dispatcher.InvokeAsync(() => this.CurrentFrame = bitmapImage);
+                    }
                 };
         }
 
@@ -67,12 +71,6 @@ namespace WpfDemo.ViewModel
             var handler = PropertyChanged;
             if (handler != null)
                 handler(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        private void DisplayPicture(System.Drawing.Image picture)
-        {
-            var bitmapImage = ImageToBitmap(picture);
-            this.CurrentFrame = bitmapImage;
         }
 
         private BitmapImage ImageToBitmap(System.Drawing.Image picture)
@@ -115,7 +113,7 @@ namespace WpfDemo.ViewModel
         private void SetupDefaultConfig()
         {
             string defaultQuality = System.Configuration.ConfigurationManager.AppSettings["DefaultQuality"];
-            var allConfigs = XmlConfigurationParser.GetVideoConfigs();            
+            var allConfigs = XmlConfigurationParser.GetVideoConfigs();
             DefaultConfig = new VideoConfiguration();
             DefaultConfig = VideoConfiguration.LoadFromConfig(allConfigs[defaultQuality]);
         }
