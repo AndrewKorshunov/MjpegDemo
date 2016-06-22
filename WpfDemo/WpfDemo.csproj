@@ -64,7 +64,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Model\HttpVideoConnector.cs" />
-    <Compile Include="Model\IVideoStreamSource.cs" />
     <Compile Include="Model\VideoChannel.cs" />
     <Compile Include="Model\VideoConfiguration.cs" />
     <Compile Include="Model\XmlConfigurationParser.cs" />

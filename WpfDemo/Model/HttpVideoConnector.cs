@@ -3,10 +3,11 @@ using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using System.Configuration;
+using MjpegLibrary;
 
 namespace WpfDemo.Model
 {
-    public class HttpVideoConnector : IVideoStreamSource
+    public class HttpVideoConnector : IStreamSource
     {
         private readonly WebClient webClient;
         private string address;
