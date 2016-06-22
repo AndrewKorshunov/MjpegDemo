@@ -13,7 +13,7 @@ namespace MjpegLibrary
 
         static public Image GetImageFromPacket(byte[] packetBytes)
         {
-            int startOfJpeg = FindSubArray(packetBytes, jpegStart, 0, packetBytes.Length);
+            int startOfJpeg = FindStartOfSubArray(packetBytes, jpegStart);
             var imageBytes = new byte[packetBytes.Length - startOfJpeg];
             Array.Copy(packetBytes, startOfJpeg, imageBytes, 0, imageBytes.Length);
             var ms = new MemoryStream(imageBytes);
@@ -21,35 +21,30 @@ namespace MjpegLibrary
             return image;
         }
 
-        static private int FindSubArray(byte[] array, byte[] needle, int startIndex, int sourceLength)
+        // Duplication from parser, do I need to add, like, Utils class? really?
+        static private int FindStartOfSubArray(byte[] array, byte[] subArray)
         {
-            int needleLen = needle.Length;
-            int index;
-
-            while (sourceLength >= needleLen)
+            int leftToCheck = array.Length; // indexes of array left to check
+            int searchStartIndex = 0; // searching in array from this index
+            while (leftToCheck >= subArray.Length)
             {
-                // find needle's starting element
-                index = Array.IndexOf(array, needle[0], startIndex, sourceLength - needleLen + 1);
-                // if we did not find even the first element of the needls, then the search is failed
-                if (index == -1)
+                // first element of subarray found in array at
+                int startOfSubArray = Array.IndexOf(array, subArray[0], searchStartIndex, leftToCheck - subArray.Length + 1);
+                if (startOfSubArray == -1)
                     return -1;
-                int i, p;
-                // check for needle
-                for (i = 0, p = index; i < needleLen; i++, p++)
+
+                int i = 0;
+                for (; i < subArray.Length; i++) // I assume that subarray.Length < array.Length
                 {
-                    if (array[p] != needle[i])
-                    {
+                    if (array[startOfSubArray + i] != subArray[i])
                         break;
-                    }
                 }
-                if (i == needleLen)
+                if (i == subArray.Length)
                 {
-                    // needle was found
-                    return index;
+                    return startOfSubArray;
                 }
-                // continue to search for needle
-                sourceLength -= (index - startIndex + 1);
-                startIndex = index + 1;
+                searchStartIndex = startOfSubArray + 1;
+                leftToCheck = array.Length - searchStartIndex;
             }
             return -1;
         }
