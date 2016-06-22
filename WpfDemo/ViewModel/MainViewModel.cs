@@ -5,8 +5,8 @@ using System.IO;
 using System.Windows.Media.Imaging;
 using System.Windows.Input;
 using System.Windows;
-using WpfDemo.Model;
 using MjpegLibrary;
+using WpfDemo.Model;
 
 namespace WpfDemo.ViewModel
 {
@@ -14,26 +14,32 @@ namespace WpfDemo.ViewModel
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private BitmapImage currentFrame;
-        private readonly IVideoStreamSource httpSource;
-        private bool isConnecting;
+        private readonly HttpVideoConnector httpVideoSource;
         private readonly MjpegStreamReader mjpegReader;
+        private BitmapImage currentFrame;
+        private bool isConnecting;
 
         public MainViewModel()
         {
+            // Button click will execute LoadSelectedChannel(), but only if its not loading channel stream right now
             LoadSelectedChannelCommand = new LoadChannelCommand(LoadSelectedChannel, () => !isConnecting);
-            httpSource = new HttpVideoConnector();
-            mjpegReader = new MjpegStreamReader(httpSource);
-            
-            PopulateChannels();
+            httpVideoSource = new HttpVideoConnector();
+            mjpegReader = new MjpegStreamReader(httpVideoSource);
+
+            PopulateVideoChannels();
             SetupDefaultConfig();
 
             mjpegReader.Starting += () => this.IsConnecting = false;
-            mjpegReader.PictureReady += () => 
-                Application.Current.Dispatcher.InvokeAsync(() => DisplayPicture(mjpegReader.Frame));
+            mjpegReader.PictureReady += () =>
+                {
+                    // Racing condition - Application.Current == null when window is closing, but parsing thread returns new picture.
+                    // Safety check, there should be another way to ensure safety.
+                    if (Application.Current != null) 
+                        Application.Current.Dispatcher.InvokeAsync(() => DisplayPicture(mjpegReader.Frame));
+                };
         }
 
-        public IEnumerable<VideoChannel> Channels { get; set; }
+        public IEnumerable<VideoChannel> Channels { get; private set; }
         public BitmapImage CurrentFrame
         {
             get { return currentFrame; }
@@ -53,7 +59,7 @@ namespace WpfDemo.ViewModel
                 OnPropertyChangedEvent("IsConnecting");
             }
         }
-        public ICommand LoadSelectedChannelCommand { get; set; }
+        public ICommand LoadSelectedChannelCommand { get; private set; }
         public VideoChannel SelectedChannel { get; set; }
 
         protected void OnPropertyChangedEvent(string propertyName)
@@ -71,6 +77,8 @@ namespace WpfDemo.ViewModel
 
         private BitmapImage ImageToBitmap(System.Drawing.Image picture)
         {
+            // MjpegLibrary providing an image which can't be used in WPF Image control,
+            // so changing image type to right one is required.
             var bitmap = new BitmapImage();
             var memoryStream = new MemoryStream();
             picture.Save(memoryStream, picture.RawFormat);
@@ -87,13 +95,13 @@ namespace WpfDemo.ViewModel
                 MessageBox.Show("Select channel first");
             else
             {
-                this.IsConnecting = true;                
-                httpSource.Setup(SelectedChannel, DefaultConfig);
+                this.IsConnecting = true;
+                httpVideoSource.Setup(SelectedChannel, DefaultConfig);
                 mjpegReader.Start();
             }
         }
-        
-        private void PopulateChannels()
+
+        private void PopulateVideoChannels()
         {
             var channels = new List<VideoChannel>();
             foreach (var channelsDictionary in XmlConfigurationParser.GetVideoChannels())
@@ -105,11 +113,10 @@ namespace WpfDemo.ViewModel
         }
 
         private void SetupDefaultConfig()
-        {            
+        {
             var allConfigs = XmlConfigurationParser.GetVideoConfigs();
             DefaultConfig = new VideoConfiguration();
             DefaultConfig = VideoConfiguration.LoadFromConfig(allConfigs["High"]);
-            DefaultConfig.Fps = 1;
         }
     }
 }
