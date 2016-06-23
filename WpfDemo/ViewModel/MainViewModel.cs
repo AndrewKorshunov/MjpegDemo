@@ -32,12 +32,12 @@ namespace WpfDemo.ViewModel
             mjpegReader.Starting += () => this.IsConnecting = false;
             mjpegReader.PictureReady += () =>
                 {
+                    var bitmapImage = ImageToBitmap(mjpegReader.Frame);
+                    bitmapImage.Freeze();
                     // Race condition - Application.Current == null when window is closing, but parsing thread returns new picture.
                     // Safety check, there should be another way to ensure safety.
                     if (Application.Current != null)
                     {
-                        var bitmapImage = ImageToBitmap(mjpegReader.Frame);
-                        bitmapImage.Freeze();
                         Application.Current.Dispatcher.InvokeAsync(() => this.CurrentFrame = bitmapImage);
                     }
                 };
