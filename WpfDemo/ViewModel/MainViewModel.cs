@@ -32,8 +32,9 @@ namespace WpfDemo.ViewModel
             mjpegReader.Starting += () => this.IsConnecting = false;
             mjpegReader.PictureReady += () =>
                 {
-                    var bitmapImage = ImageToBitmap(mjpegReader.Frame);
-                    bitmapImage.Freeze();
+                    //var bitmapImage = ImageToBitmap(mjpegReader.Image);
+                    var bitmapImage = BytesToBitmap(mjpegReader.ImageBytes);
+
                     // Race condition - Application.Current == null when window is closing, but parsing thread returns new picture.
                     // Safety check, there should be another way to ensure safety.
                     if (Application.Current != null)
@@ -73,6 +74,17 @@ namespace WpfDemo.ViewModel
                 handler(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        private BitmapImage BytesToBitmap(byte[] imageBytes)
+        {
+            var bitmap = new BitmapImage();
+            var memoryStream = new MemoryStream(imageBytes);
+            bitmap.BeginInit();
+            bitmap.StreamSource = memoryStream;
+            bitmap.EndInit();
+            bitmap.Freeze();
+            return bitmap;
+        }
+
         private BitmapImage ImageToBitmap(System.Drawing.Image picture)
         {
             // MjpegLibrary providing an image which can't be used in WPF Image control,
@@ -84,6 +96,7 @@ namespace WpfDemo.ViewModel
             bitmap.BeginInit();
             bitmap.StreamSource = memoryStream;
             bitmap.EndInit();
+            bitmap.Freeze();
             return bitmap;
         }
 

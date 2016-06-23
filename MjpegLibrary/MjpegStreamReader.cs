@@ -26,12 +26,14 @@ namespace MjpegLibrary
                 };
             this.streamParser.PacketFound += (packetBytes) =>
                 {
-                    Frame = MjpegPacket.GetImageFromPacket(packetBytes);
+                    //Image = MjpegPacket.GetImageFromPacket(packetBytes);
+                    ImageBytes = MjpegPacket.GetImageBytes(packetBytes);
                     PictureReady();
                 };
         }
 
-        public Image Frame { get; private set; }
+        public Image Image { get; private set; }
+        public byte[] ImageBytes { get; private set; }
 
         public void Start()
         {

@@ -21,6 +21,14 @@ namespace MjpegLibrary
             return image;
         }
 
+        public static byte[] GetImageBytes(byte[] packetBytes)
+        {
+            int startOfJpeg = FindStartOfSubArray(packetBytes, jpegStart);
+            var imageBytes = new byte[packetBytes.Length - startOfJpeg];
+            Array.Copy(packetBytes, startOfJpeg, imageBytes, 0, imageBytes.Length);
+            return imageBytes;
+        }
+
         // Duplication from parser, do I need to add, like, Utils class? really?
         private static int FindStartOfSubArray(byte[] array, byte[] subArray)
         {
