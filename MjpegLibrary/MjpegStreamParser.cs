@@ -48,7 +48,7 @@ namespace MjpegLibrary
                 {
                     break;
                 }
-
+                
                 int boundaryStartsAt = FindStartOfSubArray(buffer, boundary);
                 if (boundaryStartsAt == 0 && packetBytes.Count != 0) // start of new packet found in buffer
                 {
