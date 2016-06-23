@@ -17,7 +17,7 @@ namespace MjpegLibrary
             var imageBytes = new byte[packetBytes.Length - startOfJpeg];
             Array.Copy(packetBytes, startOfJpeg, imageBytes, 0, imageBytes.Length);
             var ms = new MemoryStream(imageBytes);
-            var image = Image.FromStream(ms);            
+            Image image = Image.FromStream(ms);            
             return image;
         }
 

@@ -104,7 +104,7 @@ namespace WpfDemo.ViewModel
             var channels = new List<VideoChannel>();
             foreach (var channelsDictionary in XmlConfigurationParser.GetVideoChannels())
             {
-                var channel = VideoChannel.LoadFromConfig(channelsDictionary);
+                VideoChannel channel = VideoChannel.LoadFromConfig(channelsDictionary);
                 channels.Add(channel);
             }
             Channels = channels;
