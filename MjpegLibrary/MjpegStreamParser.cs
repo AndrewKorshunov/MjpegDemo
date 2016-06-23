@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 
 namespace MjpegLibrary
@@ -55,7 +54,10 @@ namespace MjpegLibrary
                     PacketFound(packetBytes.ToArray());
                     packetBytes.Clear();
                 }
-                packetBytes.AddRange(buffer.Take(bytesRead));
+                // Moving actual bytes from buffer to packetBytes
+                var tempBuffer = new byte[bytesRead];
+                Array.Copy(buffer, tempBuffer, bytesRead);
+                packetBytes.AddRange(tempBuffer);
             }
             // shouldStop == true or stream is broken at this point, so new stream is needed
             this.IsParsing = false;
