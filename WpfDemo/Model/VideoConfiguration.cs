@@ -9,7 +9,7 @@ namespace WpfDemo.Model
         public int ResolutionX { get; set; }
         public int ResolutionY { get; set; }
         
-        static public VideoConfiguration LoadFromConfig(IDictionary<string, string> videoConfig)
+        public static VideoConfiguration LoadFromConfig(IDictionary<string, string> videoConfig)
         {
             var config = new VideoConfiguration();
             config.ResolutionX = int.Parse(videoConfig["Width"]);

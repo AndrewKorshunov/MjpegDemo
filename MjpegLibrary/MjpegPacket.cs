@@ -4,14 +4,14 @@ using System.Drawing;
 
 namespace MjpegLibrary
 {
-    static public class MjpegPacket
+    public static class MjpegPacket
     {
         //public List<string> Header { get; private set; }
         //public Image Picture { get; private set; }
 
-        static private byte[] jpegStart = new byte[] { 255, 216 };
+        private static byte[] jpegStart = new byte[] { 255, 216 };
 
-        static public Image GetImageFromPacket(byte[] packetBytes)
+        public static Image GetImageFromPacket(byte[] packetBytes)
         {
             int startOfJpeg = FindStartOfSubArray(packetBytes, jpegStart);
             var imageBytes = new byte[packetBytes.Length - startOfJpeg];
@@ -22,7 +22,7 @@ namespace MjpegLibrary
         }
 
         // Duplication from parser, do I need to add, like, Utils class? really?
-        static private int FindStartOfSubArray(byte[] array, byte[] subArray)
+        private static int FindStartOfSubArray(byte[] array, byte[] subArray)
         {
             int leftToCheck = array.Length; // indexes of array left to check
             int searchStartIndex = 0; // searching in array from this index

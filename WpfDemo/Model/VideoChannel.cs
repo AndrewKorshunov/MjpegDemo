@@ -9,7 +9,7 @@ namespace WpfDemo.Model
         public string Name { get; set; }
         public string ServerUrl { get; set; }
 
-        static public VideoChannel LoadFromConfig(IDictionary<string, string> videoChannel)
+        public static VideoChannel LoadFromConfig(IDictionary<string, string> videoChannel)
         {
             var channel = new VideoChannel();
             channel.Id = videoChannel["Id"];

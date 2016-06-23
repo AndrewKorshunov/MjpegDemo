@@ -5,7 +5,7 @@ using System.Configuration;
 
 namespace WpfDemo.Model
 {
-    static public class XmlConfigurationParser
+    public static class XmlConfigurationParser
     {
         private static readonly string url;
         private static readonly XmlDocument xml;
@@ -23,7 +23,7 @@ namespace WpfDemo.Model
             xml.Load(url);
         }
 
-        static public IEnumerable<Dictionary<string, string>> GetVideoChannels()
+        public static IEnumerable<Dictionary<string, string>> GetVideoChannels()
         {
             if (cachedChannels == null)
             {
@@ -43,7 +43,7 @@ namespace WpfDemo.Model
         }
 
         // Dictionary<Dictionary> so you can acces config parameters by Config["High"]
-        static public Dictionary<string, Dictionary<string, string>> GetVideoConfigs()
+        public static Dictionary<string, Dictionary<string, string>> GetVideoConfigs()
         {
             if (cachedConfigs == null)
             {
@@ -64,7 +64,7 @@ namespace WpfDemo.Model
             return cachedConfigs;
         }
 
-        static public Dictionary<string, string> GetVideoServer()
+        public static Dictionary<string, string> GetVideoServer()
         {
             if (cachedServer == null)
             {
