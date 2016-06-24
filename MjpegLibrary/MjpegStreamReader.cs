@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Drawing;
 
 namespace MjpegLibrary
 {
@@ -26,13 +25,11 @@ namespace MjpegLibrary
                 };
             this.streamParser.PacketFound += (packetBytes) =>
                 {
-                    //Image = MjpegPacket.GetImageFromPacket(packetBytes);
                     ImageBytes = MjpegPacket.GetImageBytes(packetBytes);
                     PictureReady();
                 };
         }
 
-        public Image Image { get; private set; }
         public byte[] ImageBytes { get; private set; }
 
         public void Start()

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Drawing;
 
 namespace MjpegLibrary
 {
@@ -10,16 +9,6 @@ namespace MjpegLibrary
         //public Image Picture { get; private set; }
 
         private static byte[] jpegStart = new byte[] { 255, 216 };
-
-        public static Image GetImageFromPacket(byte[] packetBytes)
-        {
-            int startOfJpeg = FindStartOfSubArray(packetBytes, jpegStart);
-            var imageBytes = new byte[packetBytes.Length - startOfJpeg];
-            Array.Copy(packetBytes, startOfJpeg, imageBytes, 0, imageBytes.Length);
-            var ms = new MemoryStream(imageBytes);
-            Image image = Image.FromStream(ms);            
-            return image;
-        }
 
         public static byte[] GetImageBytes(byte[] packetBytes)
         {

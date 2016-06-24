@@ -1,11 +1,10 @@
-﻿using System;
+﻿using MjpegLibrary;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Windows.Media.Imaging;
-using System.Windows.Input;
 using System.Windows;
-using MjpegLibrary;
+using System.Windows.Input;
+using System.Windows.Media;
 using WpfDemo.Model;
 
 namespace WpfDemo.ViewModel
@@ -15,14 +14,16 @@ namespace WpfDemo.ViewModel
         public event PropertyChangedEventHandler PropertyChanged;
 
         private readonly HttpVideoConnector httpVideoSource;
+        private readonly ImageSourceConverter imageConverter;
         private readonly MjpegStreamReader mjpegReader;
-        private BitmapImage currentFrame;
+        private ImageSource currentFrame;
         private bool isConnecting;
 
         public MainViewModel()
         {
             // Button click will execute LoadSelectedChannel(), but only if channel is not loading right now
             LoadSelectedChannelCommand = new LoadChannelCommand(LoadSelectedChannel, () => !isConnecting);
+            imageConverter = new ImageSourceConverter();
             httpVideoSource = new HttpVideoConnector();
             mjpegReader = new MjpegStreamReader(httpVideoSource);
 
@@ -32,20 +33,19 @@ namespace WpfDemo.ViewModel
             mjpegReader.Starting += () => this.IsConnecting = false;
             mjpegReader.PictureReady += () =>
                 {
-                    //var bitmapImage = ImageToBitmap(mjpegReader.Image);
-                    var bitmapImage = BytesToBitmap(mjpegReader.ImageBytes);
-
+                    var bitmapImage = BytesToBitmapSource(mjpegReader.ImageBytes);
                     // Race condition - Application.Current == null when window is closing, but parsing thread returns new picture.
                     // Safety check, there should be another way to ensure safety.
-                    if (Application.Current != null)
-                    {
-                        Application.Current.Dispatcher.InvokeAsync(() => this.CurrentFrame = bitmapImage);
-                    }
+                    //if (Application.Current != null)
+                    //{
+                    //Application.Current.Dispatcher.InvokeAsync(() => this.CurrentFrame = bitmapImage);
+                    //}
+                    this.CurrentFrame = bitmapImage;
                 };
         }
 
         public IEnumerable<VideoChannel> Channels { get; private set; }
-        public BitmapImage CurrentFrame
+        public ImageSource CurrentFrame
         {
             get { return currentFrame; }
             set
@@ -74,29 +74,9 @@ namespace WpfDemo.ViewModel
                 handler(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private BitmapImage BytesToBitmap(byte[] imageBytes)
+        private ImageSource BytesToBitmapSource(byte[] imageBytes)
         {
-            var bitmap = new BitmapImage();
-            var memoryStream = new MemoryStream(imageBytes);
-            bitmap.BeginInit();
-            bitmap.StreamSource = memoryStream;
-            bitmap.EndInit();
-            bitmap.Freeze();
-            return bitmap;
-        }
-
-        private BitmapImage ImageToBitmap(System.Drawing.Image picture)
-        {
-            // MjpegLibrary providing an image which can't be used in WPF Image control,
-            // so changing image type to right one is required.
-            var bitmap = new BitmapImage();
-            var memoryStream = new MemoryStream();
-            picture.Save(memoryStream, picture.RawFormat);
-            memoryStream.Seek(0, SeekOrigin.Begin);
-            bitmap.BeginInit();
-            bitmap.StreamSource = memoryStream;
-            bitmap.EndInit();
-            bitmap.Freeze();
+            var bitmap = (ImageSource)imageConverter.ConvertFrom(imageBytes);
             return bitmap;
         }
 
