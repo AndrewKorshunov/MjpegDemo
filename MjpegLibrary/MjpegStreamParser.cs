@@ -13,15 +13,15 @@ namespace MjpegLibrary
         private readonly byte[] delimiterBytes;
         private readonly byte[] buffer;
         private readonly int bufferSize;
-        private readonly string packetDelimiter;
-        private bool shouldStop;
+        private readonly List<byte> packetBytes;
+        private volatile bool shouldStop; // volitile because it will be accessed from different threads
 
         public MjpegStreamParser(string packetDelimiter)
         {
-            this.packetDelimiter = packetDelimiter;
             this.delimiterBytes = Encoding.UTF8.GetBytes(packetDelimiter); // Could get encoding from webResponse
             this.bufferSize = 4096;
             this.buffer = new byte[bufferSize];
+            this.packetBytes = new List<byte>();
         }
 
         public bool IsParsing { get; private set; }
@@ -33,7 +33,7 @@ namespace MjpegLibrary
             this.shouldStop = false;
             this.IsParsing = true;
             int bytesRead = 0;
-            var packetBytes = new List<byte>();
+            this.packetBytes.Clear();
 
             while (!shouldStop)
             {
@@ -55,9 +55,9 @@ namespace MjpegLibrary
                     packetBytes.Clear();
                 }
                 // Moving actual bytes from buffer to packetBytes
-                var tempBuffer = new byte[bytesRead];
-                Array.Copy(buffer, tempBuffer, bytesRead);
-                packetBytes.AddRange(tempBuffer);
+                var partialPacket = new byte[bytesRead];
+                Array.Copy(buffer, partialPacket, bytesRead);
+                packetBytes.AddRange(partialPacket);
             }
             // shouldStop == true or stream is broken at this point, so new stream is needed
             this.IsParsing = false;
