@@ -45,7 +45,7 @@ namespace MjpegLibrary
                 {
                     break;
                 }
-                if (bytesRead == -1) // end of stream                
+                if (bytesRead <= 0) // end of stream
                     break;
 
                 int boundaryStartsAt = FindStartOfSubArray(buffer, delimiterBytes);
