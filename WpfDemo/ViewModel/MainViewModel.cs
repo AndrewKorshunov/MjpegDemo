@@ -34,12 +34,6 @@ namespace WpfDemo.ViewModel
             mjpegReader.PictureReady += () =>
                 {
                     var bitmapImage = BytesToBitmapSource(mjpegReader.ImageBytes);
-                    // Race condition - Application.Current == null when window is closing, but parsing thread returns new picture.
-                    // Safety check, there should be another way to ensure safety.
-                    //if (Application.Current != null)
-                    //{
-                    //Application.Current.Dispatcher.InvokeAsync(() => this.CurrentFrame = bitmapImage);
-                    //}
                     this.CurrentFrame = bitmapImage;
                 };
         }
